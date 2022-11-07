@@ -102,9 +102,13 @@ button {
     border-radius: 10px;
 }
 
+#playBtn {
+    color: green;
+}
+
 /* The Modal (background) */
 #msgModal {
-    display: none;
+    display: block;
     /* Hidden by default */
     position: fixed;
     /* Stay in place */
@@ -159,4 +163,5 @@ button {
 
 #enemyIndex {
     display: none;
+    color: purple;
 }
