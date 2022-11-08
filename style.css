@@ -7,6 +7,7 @@
     background-size: 100%;
     background-color: black;
     color: white;
+    z-index: 1;
 }
 
 * {
@@ -83,6 +84,18 @@
 }
 
 /* /////////////////////////////////////////////////////////// */
+.over {
+    background-color: #000;
+    height: 100vh;
+    width: 100vw;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 5;
+    color: white;
+}
 
 .buttonContainter {
     display: flex;
@@ -96,13 +109,13 @@ button {
     text-align: center;
     text-decoration: none;
     font-size: 25px;
-    margin: 4px 2px;
+    margin: 15px 4px 4px 4px;
     cursor: pointer;
     font-weight: bold;
     border-radius: 10px;
 }
 
-#playBtn {
+#attackBtn {
     color: green;
 }
 
@@ -112,7 +125,7 @@ button {
     /* Hidden by default */
     position: fixed;
     /* Stay in place */
-    z-index: 1;
+    z-index: 3;
     /* Sit on top */
     padding-top: 100px;
     /* Location of the box */
@@ -131,6 +144,11 @@ button {
     margin: auto;
 }
 
+.modBtn{
+    display: none;
+    justify-content: space-around;
+
+}
 /* Modal Content */
 .msgModal-content {
     background-color: #fefefe;

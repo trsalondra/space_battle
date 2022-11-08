@@ -14,6 +14,15 @@
 </head>
 
 <body>
+    <div class="over">
+        <h1 id="overMsg">YOU LOSE</h1>
+        <h1>GAME OVER!</h1>
+        <div>
+            <button id="playBtn">PLAY AGAIN</button>
+        </div>
+       
+    </div>
+
     <div class="bodyContainer">
 
         <div class="mainCharacterView left">
@@ -25,7 +34,7 @@
 
         <!-- Trigger/Open The Message Modal -->
         <div class=buttonContainter>
-            <button id="playBtn">Attack</button>
+            <button id="attackBtn">Attack</button>
         </div>
 
         <!-- The MessageModal -->
@@ -34,12 +43,17 @@
             <div class="msgModal-content">
                 <span id="closeMsg">&times;</span>
                 <div id="msg"><p>Earth has been attacked by a horde of aliens! You are the captain of the USS HelloWorld, on a mission to destroy every last alien ship.</p><br><p>Battle the aliens as you try to destroy them with your lasers.</p><br><p>There are six alien ships. The aliens' weakness is that they are too logical and attack one at a time: they will wait to see the outcome of a battle before deploying another alien ship. Your strength is that you have the initiative and get to attack first. However, you do not have targeting lasers and can only attack the aliens in order. After you have destroyed a ship, you have the option to make a hasty retreat.</p></div>
+            
+                <div class="modBtn">
+                    <button id="retreatBtn">Retreat</button>
+                    <button id="continueBtn">Continue</button>
+                </div>
             </div>
         </div>
 
 
         <div class="mainCharacterView right">
-            <div class="nameBox">Enemy<span id="enemyIndex">&nbsp;1</span></div>
+            <div class="nameBox">Enemy<span id="enemyIndex">&nbsp;</span></div>
             <div class="enemyImage"></div>
             <div class="enemyStats">
 

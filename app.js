@@ -1,7 +1,6 @@
 ///////////////////////////////////////////////////////////
 // OBJECTS
 ///////////////////////////////////////////////////////////
-//#region
 
 let index = 0
 
@@ -16,14 +15,14 @@ const player = {
             if (enemy.hull <= 0) {
                 enemy.isAlive = false
                 console.log(`Congratulations! The Enemy Ship has be destroyed`)
-                return `Congratulations!<br> The Enemy Ship has be destroyed`
+                return `Congratulations!<br> The Enemy Ship has be destroyed<br>What would you like to do next?`
             } else {
                 console.log(`Congratulations! Your laser HIT the Enemy Ship`)
-                return `Congratulations!<br>Your laser HIT Enemy Ship`
+                return `Congratulations!<br>Your laser HIT the Enemy Ship`
             }
         } else {
-            console.log('Unfortunately! Your laser attack MISSED the Enemy')
-            return 'Unfortunately!<br>Your laser attack MISSED the Enemy'
+            console.log(`Unfortunately! Your laser MISSED the Enemy`)
+            return `Unfortunately! Your laser MISSED the Enemy`
         }
     }
 }
@@ -42,31 +41,35 @@ class EnemyShip {
             if (player.hull <= 0) {
                 player.isAlive = false
                 console.log(`GAME OVER! You LOSE!`)
-                return `GAME OVER! You LOSE!`
+                over.style.display = 'flex'
             } else {
-                console.log("The Enemy's laser HIT YOU!")
-                return "The Enemy's laser HIT YOU!"
+                console.log(`The Enemy's laser HIT YOU!`)
+                return `The Enemy's laser HIT YOU!`
             }
+        } else {
+            console.log(`The Enemy's laser MISSED YOU!`)
+            return `The Enemy's laser MISSED YOU!`
         }
     }
 }
-//#endregion
+
 ///////////////////////////////////////////////////////////
 // ENEMY FACTORY
 ///////////////////////////////////////////////////////////
-//#region
-let enemyNum = 4
+
+let enemyNum = 6
 let enemy = []
 
 for (let i = 0; i < enemyNum; i++) {
     enemy.push(new EnemyShip(i))
 }
 
-//#endregion
+console.log(enemy)
+
 ///////////////////////////////////////////////////////////
 // STATS
 ///////////////////////////////////////////////////////////
-//#region
+
 let playerStats = document.querySelector('.playerStats')
 
 displayStats(playerStats, player)
@@ -80,18 +83,49 @@ function displayStats(stats, player) {
     FirePower : ${player.firepower} <br>
     Accuracy : ${player.accuracy} <br>`
 }
-//#endregion
-///////////////////////////////////////////////////////////
-// MOD BUTTON
-///////////////////////////////////////////////////////////
-//#region
-let playBtn = document.querySelector('#playBtn')
 
-let mgsModal = document.querySelector('#msgModal')
+///////////////////////////////////////////////////////////
+// MOD & BUTTONS
+///////////////////////////////////////////////////////////
+
+let attackBtn = document.querySelector('#attackBtn')
+
+let msgModal = document.querySelector('#msgModal')
 
 let msg = document.querySelector('#msg')
 
+let overMsg = document.querySelector('#overMsg')
+
 let closeMsg = document.querySelector('#closeMsg')
+
+closeMsg.onclick = function () {
+    msgModal.style.display = 'none'
+}
+
+let modBtn = document.querySelector('.modBtn')
+
+let retreatBtn = document.querySelector('#retreatBtn')
+retreatBtn.onclick = function () {
+    over.style.display = 'flex'
+    // location.reload()
+}
+
+let continueBtn = document.querySelector('#continueBtn')
+continueBtn.onclick = function () {
+    msgModal.style.display = 'none'
+    index++
+    attackBtn.innerHTML = 'Attack'
+    attackBtn.style.color = 'green'
+}
+
+let over = document.querySelector('.over')
+
+let playBtn = document.querySelector('#playBtn')
+
+playBtn.onclick = function () {
+    location.reload()
+}
+
 
 ///////////////////////////////////////////////////////////
 
@@ -99,89 +133,63 @@ function updateEnemy(enemyArr) {
     return enemyArr.filter(element => element.isAlive === true)
 }
 
-let updatedEnemy = []
+let newEnemy = []
 
-updatedEnemy = updateEnemy(enemy)
-console.log(updatedEnemy)
+newEnemy = updateEnemy(enemy)
 
-playBtn.onclick = function () {
+attackBtn.onclick = function () {
+    // enemyIndex.innerHTML = `&nbsp;${index + 1}`
 
-    // problem is that is goes to await attack for the same ship that has been destroyed
+    if (index === newEnemy.length) {
+        console.log('restart')
+        index = 0
+    }
 
-    switch (playBtn.innerText) {
+    if (newEnemy.length === 0) {
+        overMsg.innerHTML = `You WIN!`
+        over.style.display = 'flex'
+    }
+
+    switch (attackBtn.innerText) {
         case 'Attack':
             console.log(`${index + 1} attack case`)
+            msg.innerHTML = player.attack(newEnemy[index])
+            displayStats(enemyStats, newEnemy[index])
 
-            msg.innerHTML = player.attack(updatedEnemy[index])
-            if (updatedEnemy[index].isAlive === true) {
-                playBtn.innerHTML = 'Await Attack'
-                playBtn.style.color = 'red'
+            if (newEnemy[index].isAlive === false) {
+                newEnemy = updateEnemy(newEnemy)
+                if (newEnemy.length === 0) {
+                    overMsg.innerHTML = `You WIN!`
+                    over.style.display = 'flex'
+                } else {
+                    modBtn.style.display = 'flex'
+                }
+
             } else {
-            index++
-            enemyIndex.innerHTML = `&nbsp;${enemy[index].num + 1}`
-            playBtn.innerHTML = 'Attack'
-            playBtn.style.color = 'green'
-            
+                modBtn.style.display = 'none'
+                attackBtn.innerHTML = 'Await Attack'
+                attackBtn.style.color = 'red'
             }
-            displayStats(enemyStats, updatedEnemy[index])
-            console.log(updatedEnemy)
+            console.log(newEnemy)
+            // newEnemy = updateEnemy(newEnemy)
+            // console.log(newEnemy)
             break
         case 'Await Attack':
             console.log(`${index + 1} await case `)
-            msg.innerHTML = updatedEnemy[index].attack(player)
-            if (player.isAlive === true){
-                index++
-                enemyIndex.innerHTML = `&nbsp;${enemy[index].num + 1}`
-                playBtn.innerHTML = 'Attack'
-                playBtn.style.color = 'green'
-            }else {
-                console.log('player lost')
-            }
+            msg.innerHTML = newEnemy[index].attack(player)
             displayStats(playerStats, player)
-            console.log(updatedEnemy)
+
+            if (player.isAlive === true) {
+                index++
+                attackBtn.innerHTML = 'Attack'
+                attackBtn.style.color = 'green'
+            } else {
+                over.style.display = 'flex'
+            }
             break
     }
-
-    if (index === updatedEnemy.length) {
-        console.log('restart')
-        updatedEnemy = updateEnemy(enemy)
-        console.log(updatedEnemy)
-        index = 0
-        if (updateEnemy.length === 0) {
-            console.log('player won')
-        }
-    }
-    mgsModal.style.display = 'block'
+    msgModal.style.display = 'block'
 }
 
-/////////////////////////////////////////////////////////// 
-// CLOSING
-///////////////////////////////////////////////////////////
 
-closeMsg.onclick = function () {
-    msgModal.style.display = 'none'
-    enemyIndex.style.display = 'block'
-    // switch (playBtn.innerText) {
-    //     case 'PLAY':
-    //         playBtn.innerHTML = 'Attack'
-    //         playBtn.style.color = 'green'
-    //     case 'Attack':
-    //         if(updatedEnemy[index].isAlive === true){
-    //             playBtn.innerHTML = 'Await Attack'
-    //             playBtn.style.color = 'red'
-
-    //         } else {
-    //             index++
-    //             enemyIndex.innerHTML = `&nbsp;${enemy[index].num + 1}`
-    //             playBtn.innerHTML = 'Attack'
-    //             playBtn.style.color = 'green'
-    //         }
-    //     case 'Await Attack':
-    //         enemyIndex.innerHTML = `&nbsp;${enemy[index].num + 1}` // insert +1 later
-    //         playBtn.innerHTML = 'Attack'
-    //         playBtn.style.color = 'green'
-    // }
-}
-
-console.log(`${enemy[index].num + 1}`)
 
